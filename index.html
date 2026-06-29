@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Soutien Philibert Strasbourg - Ligue Nationale SWU</title>
+  <style>
+    :root {
+      --bg: #090d15;
+      --panel: rgba(18, 24, 38, 0.88);
+      --panel-2: #182033;
+      --text: #f4f7fb;
+      --muted: #b7c0d1;
+      --accent: #f5c542;
+      --accent-2: #5dd6ff;
+      --border: rgba(255,255,255,0.13);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(93, 214, 255, 0.16), transparent 34%),
+        radial-gradient(circle at top right, rgba(245, 197, 66, 0.13), transparent 32%),
+        linear-gradient(180deg, #090d15 0%, #101522 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .topbar {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 26px 24px 0;
+      display: flex;
+      justify-content: center;
+      gap: 22px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .logo-card {
+      height: 78px;
+      min-width: 120px;
+      padding: 10px 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo-card img {
+      max-height: 56px;
+      max-width: 160px;
+      object-fit: contain;
+    }
+    .logo-card.dark img { filter: none; }
+    header {
+      padding: 44px 24px 48px;
+      text-align: center;
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+    .badge {
+      display: inline-block;
+      padding: 8px 14px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--accent);
+      background: rgba(255,255,255,0.04);
+      font-size: 0.9rem;
+      letter-spacing: 0.02em;
+      margin-bottom: 24px;
+    }
+    h1 {
+      font-size: clamp(2.1rem, 5vw, 4.4rem);
+      line-height: 1.05;
+      margin: 0 0 24px;
+      letter-spacing: -0.045em;
+    }
+    h1 span { color: var(--accent); }
+    .subtitle {
+      max-width: 800px;
+      margin: 0 auto 22px;
+      color: var(--muted);
+      font-size: clamp(1.05rem, 2vw, 1.35rem);
+    }
+    .counter {
+      display: inline-flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 18px;
+      margin: 12px auto 0;
+      border-radius: 999px;
+      background: rgba(245, 197, 66, 0.12);
+      border: 1px solid rgba(245, 197, 66, 0.32);
+      color: var(--text);
+      font-weight: 700;
+    }
+    .counter strong { color: var(--accent); }
+    .cta-row {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 32px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 50px;
+      padding: 0 22px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 800;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+    .btn:hover { transform: translateY(-1px); opacity: 0.92; }
+    .btn-primary { background: var(--accent); color: #141414; }
+    .btn-secondary { border: 1px solid var(--border); color: var(--text); background: rgba(255,255,255,0.05); }
+    main { max-width: 1120px; margin: 0 auto; padding: 0 24px 72px; }
+    section {
+      margin: 28px 0;
+      padding: 28px;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background: var(--panel);
+      backdrop-filter: blur(12px);
+    }
+    h2 { margin: 0 0 14px; font-size: 1.6rem; letter-spacing: -0.02em; }
+    p { margin: 0 0 14px; color: var(--muted); }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 22px;
+    }
+    .stat {
+      padding: 20px;
+      border-radius: 18px;
+      background: var(--panel-2);
+      border: 1px solid var(--border);
+    }
+    .stat strong {
+      display: block;
+      font-size: 1.85rem;
+      color: var(--accent);
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+    .stat span { color: var(--muted); font-size: 0.95rem; }
+    ul { margin: 12px 0 0; padding-left: 20px; color: var(--muted); }
+    li { margin: 8px 0; }
+    .highlight {
+      border-left: 4px solid var(--accent);
+      padding-left: 18px;
+      margin-top: 18px;
+      color: var(--text);
+      font-weight: 650;
+    }
+    .two-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+    }
+    .faq details {
+      border-top: 1px solid var(--border);
+      padding: 16px 0;
+    }
+    .faq details:first-child { border-top: none; }
+    .faq summary {
+      cursor: pointer;
+      font-weight: 800;
+      color: var(--text);
+    }
+    footer {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 32px 24px 56px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      text-align: center;
+    }
+    .legal { font-size: 0.85rem; color: #8f9bb0; }
+    @media (max-width: 850px) {
+      .grid, .two-cols { grid-template-columns: 1fr; }
+      header { padding-top: 34px; }
+      section { padding: 22px; }
+      .logo-card { height: 66px; min-width: 98px; }
+      .logo-card img { max-height: 46px; max-width: 130px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="logo-card dark"><img src="swu_logo.png" alt="Logo Star Wars Unlimited"></div>
+    <div class="logo-card"><img src="philibert_logo.png" alt="Logo Philibert Strasbourg"></div>
+    <div class="logo-card"><img src="philibar_logo.png" alt="Logo Philibar"></div>
+  </div>
+
+  <header>
+    <div class="badge">Communauté Star Wars™: Unlimited - Strasbourg & Grand Est</div>
+    <h1>Soutien à la candidature de <span>Philibert Strasbourg</span></h1>
+    <p class="subtitle">
+      Les joueurs de la communauté Star Wars™: Unlimited de Strasbourg souhaitent soutenir Philibert
+      pour intégrer la prochaine Ligue Nationale organisée par Asmodee France.
+    </p>
+    <div class="counter"><strong>30+ joueurs actifs</strong> · 4 juges certifiés · 1 ambassadeur officiel</div>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="https://forms.gle/wGcNc3Px7AJ8coFu7" target="_blank" rel="noopener">Signer la lettre de soutien</a>
+      <a class="btn btn-secondary" href="memoire-soutien-philibert-swu-strasbourg.pdf" target="_blank" rel="noopener">Télécharger le mémoire PDF</a>
+      <a class="btn btn-secondary" href="#demarche">Découvrir la démarche</a>
+    </div>
+  </header>
+
+  <main>
+    <section id="demarche">
+      <h2>Une démarche positive et constructive</h2>
+      <p>
+        Cette initiative ne vise pas à contester les choix de la première saison de la Ligue Nationale.
+        Elle a pour objectif de montrer l'intérêt réel de la communauté locale et son souhait de voir Strasbourg
+        représentée lors de la prochaine édition.
+      </p>
+      <p class="highlight">
+        Notre ambition : permettre aux joueurs du Grand Est de participer pleinement à cette aventure compétitive,
+        dans un cadre organisé, convivial et conforme à l'esprit du jeu organisé.
+      </p>
+    </section>
+
+    <section>
+      <h2>La communauté en quelques chiffres</h2>
+      <div class="grid">
+        <div class="stat"><strong>30+</strong><span>joueurs actifs à Strasbourg et dans un rayon d'environ 30 km</span></div>
+        <div class="stat"><strong>6-12</strong><span>joueurs en moyenne aux Weekly Play du jeudi soir</span></div>
+        <div class="stat"><strong>4</strong><span>juges certifiés : 2 L1 et 2 L0</span></div>
+        <div class="stat"><strong>1</strong><span>Ambassadeur officiel Star Wars™: Unlimited</span></div>
+      </div>
+    </section>
+
+    <section class="two-cols">
+      <div>
+        <h2>Une activité régulière</h2>
+        <p>La communauté participe activement aux événements organisés autour de Philibert :</p>
+        <ul>
+          <li>Weekly Play chaque jeudi soir ;</li>
+          <li>Avant-premières des nouvelles extensions ;</li>
+          <li>Store Showdowns ;</li>
+          <li>Planetary Qualifiers ;</li>
+          <li>événements Twin Suns organisés avec Philibert et le Philibar ;</li>
+          <li>rencontres communautaires et accompagnement des nouveaux joueurs.</li>
+        </ul>
+      </div>
+      <div>
+        <h2>Un encadrement solide</h2>
+        <p>
+          La communauté strasbourgeoise compte quatre juges certifiés, dont deux juges de niveau 1 et deux juges de niveau 0.
+          Elle bénéficie également de la présence d'un Ambassadeur officiel Star Wars™: Unlimited.
+        </p>
+        <p>
+          Cette structure constitue un atout pour accompagner les événements compétitifs et garantir un environnement
+          de jeu clair, accueillant et rigoureux.
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Philibert, un point d'ancrage naturel</h2>
+      <p>
+        Philibert est aujourd'hui le point de rassemblement principal de la communauté Star Wars™: Unlimited de Strasbourg.
+        La boutique dispose de l'expérience, des infrastructures et de la dynamique nécessaires pour accueillir des
+        événements réguliers comme des tournois plus ambitieux.
+      </p>
+      <p>
+        La capacité d'accueil peut être renforcée grâce au partenariat avec le Philibar, notamment pour des événements
+        en soirée, le week-end ou le dimanche.
+      </p>
+    </section>
+
+    <section>
+      <h2>Un rayonnement régional et transfrontalier</h2>
+      <p>
+        Une étape de Ligue Nationale organisée à Strasbourg pourrait rayonner au-delà de la seule agglomération.
+        Par sa position géographique, Strasbourg est susceptible d'attirer des joueurs d'Alsace, de Lorraine,
+        d'Allemagne et de Suisse.
+      </p>
+      <p class="highlight">
+        Intégrer Philibert à la Ligue Nationale permettrait de renforcer la présence de Star Wars™: Unlimited dans le Grand Est
+        et d'offrir une étape accessible à une communauté déjà active et structurée.
+      </p>
+    </section>
+
+    <section>
+      <h2>Pourquoi signer ?</h2>
+      <p>En signant cette lettre de soutien, les joueurs témoignent :</p>
+      <ul>
+        <li>de leur attachement à Philibert ;</li>
+        <li>de leur souhait de voir Strasbourg intégrer la prochaine Ligue Nationale ;</li>
+        <li>de leur volonté de participer activement à cette compétition ;</li>
+        <li>de leur confiance dans la capacité de Philibert à organiser un événement répondant aux standards du jeu organisé Asmodee.</li>
+      </ul>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="https://forms.gle/wGcNc3Px7AJ8coFu7" target="_blank" rel="noopener">Signer la lettre de soutien</a>
+        <a class="btn btn-secondary" href="memoire-soutien-philibert-swu-strasbourg.pdf" target="_blank" rel="noopener">Lire le mémoire complet</a>
+      </div>
+    </section>
+
+    <section class="faq">
+      <h2>Questions fréquentes</h2>
+      <details>
+        <summary>Cette démarche est-elle une pétition contre Asmodee France ?</summary>
+        <p>Non. Il s'agit d'une lettre de soutien positive destinée à appuyer la candidature de Philibert Strasbourg pour une prochaine saison.</p>
+      </details>
+      <details>
+        <summary>Les données collectées seront-elles publiques ?</summary>
+        <p>Non. Elles sont destinées à constituer la liste des soutiens transmise à Philibert dans le cadre exclusif de cette démarche.</p>
+      </details>
+      <details>
+        <summary>Faut-il être joueur compétitif pour signer ?</summary>
+        <p>Non. Tout joueur ou sympathisant de la communauté locale peut soutenir la démarche.</p>
+      </details>
+    </section>
+  </main>
+
+  <footer>
+    <p>Initiative communautaire de soutien à la candidature de Philibert Strasbourg pour la prochaine Ligue Nationale Star Wars™: Unlimited organisée par Asmodee France.</p>
+    <p class="legal">
+      Star Wars™: Unlimited, Star Wars™ et leurs marques associées appartiennent à leurs titulaires respectifs.
+      Cette page est une initiative de joueurs et n'est pas une communication officielle d'Asmodee, de Fantasy Flight Games ou de Philibert.
+      Les logos sont utilisés ici comme éléments d'identification de la démarche de soutien ; leur usage reste soumis à l'accord de leurs ayants droit respectifs.
+    </p>
+  </footer>
+</body>
+</html>
