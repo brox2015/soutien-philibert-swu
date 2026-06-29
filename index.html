@@ -547,12 +547,10 @@
         if (!messagesContainer || !messagesStatus) return;
 
         const pseudoIndex = findColumnIndex(headers, ["pseudo"]);
-        const messageIndex = findColumnIndex(headers, ["message", "soutien", "commentaire"]);
 
-        if (messageIndex === -1) {
-          messagesStatus.textContent = "La colonne des messages n'a pas été détectée.";
-          return;
-        }
+        // Colonne G du Google Sheet = index 6 en JavaScript.
+        // Cette colonne contient le message de soutien.
+        const messageIndex = 6;
 
         const messages = responses.map(row => {
           const message = (row[messageIndex] || "").trim();
