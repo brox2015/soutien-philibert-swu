@@ -220,6 +220,45 @@
       }
     }
 
+
+    .support-messages {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 22px;
+    }
+
+    .message-card {
+      padding: 20px;
+      border-radius: 18px;
+      background: var(--panel-2);
+      border: 1px solid var(--border);
+    }
+
+    .message-card .quote {
+      color: var(--text);
+      font-style: italic;
+      margin-bottom: 14px;
+    }
+
+    .message-card .signature {
+      color: var(--accent);
+      font-weight: 800;
+      margin: 0;
+    }
+
+    .messages-status {
+      color: var(--muted);
+      margin-top: 12px;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 950px) {
+      .support-messages {
+        grid-template-columns: 1fr;
+      }
+    }
+
     footer {
       max-width: 1120px;
       margin: 0 auto;
@@ -359,6 +398,17 @@
     </section>
 
 
+
+    <section id="messages-soutien">
+      <h2>Messages de soutien de la communauté</h2>
+      <p>
+        Les joueurs qui le souhaitent peuvent laisser un message avec leur signature.
+        Les messages ci-dessous sont affichés automatiquement depuis le formulaire de soutien.
+      </p>
+      <div id="messages-status" class="messages-status">Chargement des messages...</div>
+      <div id="support-messages" class="support-messages"></div>
+    </section>
+
     <section id="communaute">
       <h2>Rejoindre la communauté</h2>
       <p>
@@ -421,66 +471,123 @@
     </p>
   </footer>
 
+
+
+
   <script>
     function parseCsvRows(text) {
       const rows = [];
       let row = [];
       let cell = "";
       let inQuotes = false;
-
       for (let i = 0; i < text.length; i++) {
         const char = text[i];
         const next = text[i + 1];
-
         if (char === '"' && inQuotes && next === '"') {
-          cell += '"';
-          i++;
+          cell += '"'; i++;
         } else if (char === '"') {
           inQuotes = !inQuotes;
         } else if (char === "," && !inQuotes) {
-          row.push(cell);
-          cell = "";
+          row.push(cell); cell = "";
         } else if ((char === "\n" || char === "\r") && !inQuotes) {
           if (char === "\r" && next === "\n") i++;
           row.push(cell);
           if (row.some(value => value.trim() !== "")) rows.push(row);
-          row = [];
-          cell = "";
+          row = []; cell = "";
         } else {
           cell += char;
         }
       }
-
       row.push(cell);
       if (row.some(value => value.trim() !== "")) rows.push(row);
       return rows;
     }
 
-    async function updateSignatureCounter() {
+    function normalizeHeader(value) {
+      return (value || "").toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+    }
+
+    function findColumnIndex(headers, keywords) {
+      const normalized = headers.map(normalizeHeader);
+      return normalized.findIndex(header => keywords.some(keyword => header.includes(keyword)));
+    }
+
+    function escapeHtml(value) {
+      return (value || "").toString()
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    async function loadCommunityData() {
       const counter = document.getElementById("signature-counter");
       const countElement = document.getElementById("signature-count");
-      if (!counter || !countElement) return;
+      const messagesContainer = document.getElementById("support-messages");
+      const messagesStatus = document.getElementById("messages-status");
+      if (!counter) return;
 
       try {
         const csvUrl = counter.dataset.csvUrl + "&cachebust=" + Date.now();
         const response = await fetch(csvUrl, { cache: "no-store" });
         if (!response.ok) throw new Error("CSV inaccessible");
 
-        const csvText = await response.text();
-        const rows = parseCsvRows(csvText);
+        const rows = parseCsvRows(await response.text());
+        if (rows.length <= 1) {
+          if (countElement) countElement.textContent = "0";
+          if (messagesStatus) messagesStatus.textContent = "Aucun message affiché pour le moment.";
+          return;
+        }
 
-        // Ligne 1 = en-têtes Google Forms. Les lignes suivantes = réponses.
-        const count = Math.max(rows.length - 1, 0);
+        const headers = rows[0];
+        const responses = rows.slice(1).filter(row => row.some(cell => cell.trim() !== ""));
+        if (countElement) countElement.textContent = responses.length.toString();
 
-        countElement.textContent = count.toString();
+        if (!messagesContainer || !messagesStatus) return;
+
+        const pseudoIndex = findColumnIndex(headers, ["pseudo"]);
+        const messageIndex = findColumnIndex(headers, ["message", "soutien", "commentaire"]);
+
+        if (messageIndex === -1) {
+          messagesStatus.textContent = "La colonne des messages n'a pas été détectée.";
+          return;
+        }
+
+        const messages = responses.map(row => {
+          const message = (row[messageIndex] || "").trim();
+          const pseudo = pseudoIndex >= 0 ? (row[pseudoIndex] || "").trim() : "";
+          return { message, pseudo: pseudo || "Un Jedi anonyme" };
+        }).filter(item => item.message.length > 0);
+
+        if (messages.length === 0) {
+          messagesStatus.textContent = "Aucun message affiché pour le moment.";
+          messagesContainer.innerHTML = "";
+          return;
+        }
+
+        messagesStatus.textContent = messages.length === 1
+          ? "1 message de soutien affiché."
+          : messages.length + " messages de soutien affichés.";
+
+        messagesContainer.innerHTML = messages.map(item => `
+          <article class="message-card">
+            <p class="quote">“${escapeHtml(item.message)}”</p>
+            <p class="signature">— ${escapeHtml(item.pseudo)}</p>
+          </article>
+        `).join("");
+
       } catch (error) {
-        console.warn("Impossible de charger le compteur de soutiens :", error);
-        countElement.textContent = "30+";
-        counter.innerHTML = '<strong>30+</strong> joueurs soutiennent déjà cette candidature';
+        console.warn("Impossible de charger les données de soutien :", error);
+        if (countElement) {
+          countElement.textContent = "30+";
+          counter.innerHTML = '<strong>30+</strong> joueurs soutiennent déjà cette candidature';
+        }
+        if (messagesStatus) messagesStatus.textContent = "Les messages ne peuvent pas être chargés pour le moment.";
       }
     }
 
-    updateSignatureCounter();
+    loadCommunityData();
   </script>
 
 </body>
