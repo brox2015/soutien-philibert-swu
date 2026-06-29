@@ -297,7 +297,7 @@
 
     .milestones {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 10px;
       margin-top: 12px;
       color: var(--muted);
@@ -306,6 +306,11 @@
     }
 
     .milestone {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 108px;
       padding: 8px 10px;
       border-radius: 999px;
       background: rgba(255,255,255,0.05);
@@ -374,6 +379,39 @@
       font-size: 0.95rem;
     }
 
+
+    .milestone .milestone-icon {
+      display: block;
+      font-size: 2rem;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+
+    .milestone .milestone-title {
+      display: block;
+      line-height: 1.25;
+      text-align: center;
+    }
+
+    .milestone .milestone-number {
+      display: block;
+      margin-top: 8px;
+      font-size: 1.15rem;
+      color: var(--text);
+    }
+
+    .milestone.reached .milestone-number,
+    .milestone.reached .milestone-title,
+    .milestone.reached .milestone-icon {
+      color: #141414;
+    }
+
+    .btn .btn-icon {
+      margin-right: 10px;
+      font-size: 1.15em;
+      line-height: 1;
+    }
+
     footer {
       max-width: 1120px;
       margin: 0 auto;
@@ -423,18 +461,26 @@
         <div class="progress-fill" id="progress-fill"></div>
       </div>
       <div class="milestones">
-        <div class="milestone" id="milestone-15">Premier élan · 15</div>
-        <div class="milestone" id="milestone-30">Communauté mobilisée · 30</div>
-        <div class="milestone" id="milestone-50">Objectif majeur · 50</div>
-        <div class="milestone" id="milestone-75">On explose les compteurs</div>
+        <div class="milestone" id="milestone-15">
+          <span class="milestone-icon">🌱</span>
+          <span class="milestone-title">Premier élan</span>
+        </div>
+        <div class="milestone" id="milestone-30">
+          <span class="milestone-icon">🚀</span>
+          <span class="milestone-title">Communauté mobilisée</span>
+        </div>
+        <div class="milestone" id="milestone-50">
+          <span class="milestone-icon">✨</span>
+          <span class="milestone-title">On explose le compteur</span>
+        </div>
       </div>
     </div>
     <div class="cta-row">
-      <a class="btn btn-primary" href="https://forms.gle/wGcNc3Px7AJ8coFu7" target="_blank" rel="noopener">Signer la lettre de soutien</a>
-      <a class="btn btn-whatsapp" href="https://chat.whatsapp.com/Gke2zL10pP8EKOccN4hpPe?s=cl&p=i&mlu=4" target="_blank" rel="noopener">WhatsApp</a>
-      <a class="btn btn-discord" href="https://discord.gg/cFVUBQNpf" target="_blank" rel="noopener">Discord</a>
-      <a class="btn btn-secondary" href="memoire-soutien-philibert-swu-strasbourg.pdf" target="_blank" rel="noopener">Télécharger le mémoire PDF</a>
-      <a class="btn btn-secondary" href="#demarche">Découvrir la démarche</a>
+      <a class="btn btn-primary" href="https://forms.gle/wGcNc3Px7AJ8coFu7" target="_blank" rel="noopener"><span class="btn-icon">✍️</span>Signer la lettre de soutien</a>
+      <a class="btn btn-whatsapp" href="https://chat.whatsapp.com/Gke2zL10pP8EKOccN4hpPe?s=cl&p=i&mlu=4" target="_blank" rel="noopener"><span class="btn-icon">🟢</span>WhatsApp</a>
+      <a class="btn btn-discord" href="https://discord.gg/cFVUBQNpf" target="_blank" rel="noopener"><span class="btn-icon">💬</span>Discord</a>
+      <a class="btn btn-secondary" href="memoire-soutien-philibert-swu-strasbourg.pdf" target="_blank" rel="noopener"><span class="btn-icon">📄</span>Télécharger le mémoire PDF</a>
+      <a class="btn btn-secondary" href="#demarche"><span class="btn-icon">ℹ️</span>Découvrir la démarche</a>
     </div>
   </header>
 
@@ -524,7 +570,7 @@
         <li>de leur confiance dans la capacité de Philibert à organiser un événement répondant aux standards du jeu organisé Asmodee.</li>
       </ul>
       <div class="cta-row">
-        <a class="btn btn-primary" href="https://forms.gle/wGcNc3Px7AJ8coFu7" target="_blank" rel="noopener">Signer la lettre de soutien</a>
+        <a class="btn btn-primary" href="https://forms.gle/wGcNc3Px7AJ8coFu7" target="_blank" rel="noopener"><span class="btn-icon">✍️</span>Signer la lettre de soutien</a>
         <a class="btn btn-secondary" href="memoire-soutien-philibert-swu-strasbourg.pdf" target="_blank" rel="noopener">Lire le mémoire complet</a>
       </div>
     </section>
@@ -710,7 +756,7 @@
 
 
   <script>
-    const CAMPAIGN_MILESTONES = [15, 30, 50, 75];
+    const CAMPAIGN_MILESTONES = [15, 30, 50];
 
     function parseCsvRows(text) {
       const rows = [];
@@ -772,9 +818,11 @@
       if (progressPercent) progressPercent.textContent = percent + " %";
       if (progressLabel) {
         progressLabel.textContent = count >= finalTarget
-          ? "On explose les compteurs !"
-          : nextTarget === 75
-            ? "Prochain palier : on explose les compteurs"
+          ? "On explose le compteur !"
+          : nextTarget === 50
+            ? "Prochain palier : on explose le compteur"
+            : nextTarget === 50
+            ? "Prochain palier : on explose le compteur"
             : "Prochain palier : " + nextTarget + " soutiens";
       }
 
