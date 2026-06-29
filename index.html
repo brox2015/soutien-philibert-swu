@@ -259,6 +259,85 @@
       }
     }
 
+
+    .campaign-progress {
+      max-width: 760px;
+      margin: 24px auto 0;
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+    }
+
+    .progress-topline {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 10px;
+    }
+
+    .progress-bar {
+      position: relative;
+      height: 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.12);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transition: width 0.5s ease;
+    }
+
+    .milestones {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    .milestone {
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      font-weight: 700;
+    }
+
+    .milestone.reached {
+      color: #141414;
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .support-wall {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .supporter-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      color: var(--text);
+      background: rgba(255,255,255,0.07);
+      border: 1px solid var(--border);
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+
     footer {
       max-width: 1120px;
       margin: 0 auto;
@@ -286,16 +365,33 @@
 
   <header>
     <div class="badge">Communauté Star Wars™: Unlimited - Strasbourg & Grand Est</div>
-    <h1>Soutien à la candidature de <span>Philibert Strasbourg</span></h1>
+    <h1>La communauté <span>Star Wars™: Unlimited</span> de Strasbourg se mobilise</h1>
     <p class="subtitle">
-      Les joueurs de la communauté Star Wars™: Unlimited de Strasbourg souhaitent soutenir Philibert
-      pour intégrer la prochaine Ligue Nationale organisée par Asmodee France.
+      Déjà <strong id="hero-signature-count">...</strong> joueurs soutiennent la candidature de
+      <strong>Philibert Strasbourg</strong> à la prochaine Ligue Nationale organisée par Asmodee France.
+      Rejoignez-les !
     </p>
     <div class="counter" id="signature-counter" data-csv-url="https://docs.google.com/spreadsheets/d/e/2PACX-1vT1wVj6RzRonTptBjqFxx_C0X_3SHOzX01lq8CAvClxrsJiH3YPQN7_Ddi9c74xBfEBpN1wDvyfJYuP/pub?output=csv">
       <strong id="signature-count">Chargement...</strong> joueurs soutiennent déjà cette candidature
     </div>
     <div class="counter counter-secondary">
       <strong>30+ joueurs actifs</strong> · 4 juges certifiés · 1 ambassadeur officiel
+    </div>
+
+    <div class="campaign-progress" aria-label="Objectif de campagne">
+      <div class="progress-topline">
+        <span id="progress-label">Objectif : 30 soutiens</span>
+        <span id="progress-percent">0 %</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+      <div class="milestones">
+        <div class="milestone" id="milestone-15">Premier élan · 15</div>
+        <div class="milestone" id="milestone-30">Communauté mobilisée · 30</div>
+        <div class="milestone" id="milestone-50">Objectif majeur · 50</div>
+        <div class="milestone" id="milestone-75">On explose les compteurs</div>
+      </div>
     </div>
     <div class="cta-row">
       <a class="btn btn-primary" href="https://forms.gle/wGcNc3Px7AJ8coFu7" target="_blank" rel="noopener">Signer la lettre de soutien</a>
@@ -409,6 +505,17 @@
       <div id="support-messages" class="support-messages"></div>
     </section>
 
+
+    <section id="mur-soutiens">
+      <h2>Mur des soutiens</h2>
+      <p>
+        Les pseudos des joueurs ayant apporté leur soutien apparaissent ici automatiquement.
+        Lorsqu'aucun pseudo n'est renseigné, la signature est affichée sous la forme « Un Jedi anonyme ».
+      </p>
+      <div id="support-wall-status" class="messages-status">Chargement du mur des soutiens...</div>
+      <div id="support-wall" class="support-wall"></div>
+    </section>
+
     <section id="communaute">
       <h2>Rejoindre la communauté</h2>
       <p>
@@ -474,7 +581,12 @@
 
 
 
+
+
+
   <script>
+    const CAMPAIGN_MILESTONES = [15, 30, 50, 75];
+
     function parseCsvRows(text) {
       const rows = [];
       let row = [];
@@ -521,11 +633,41 @@
         .replaceAll("'", "&#039;");
     }
 
+    function updateCampaignProgress(count) {
+      const finalTarget = CAMPAIGN_MILESTONES[CAMPAIGN_MILESTONES.length - 1];
+      const nextTarget = CAMPAIGN_MILESTONES.find(target => count < target) || finalTarget;
+
+      const progressFill = document.getElementById("progress-fill");
+      const progressPercent = document.getElementById("progress-percent");
+      const progressLabel = document.getElementById("progress-label");
+
+      const percent = Math.min(Math.round((count / finalTarget) * 100), 100);
+
+      if (progressFill) progressFill.style.width = percent + "%";
+      if (progressPercent) progressPercent.textContent = percent + " %";
+      if (progressLabel) {
+        progressLabel.textContent = count >= finalTarget
+          ? "On explose les compteurs !"
+          : nextTarget === 75
+            ? "Prochain palier : on explose les compteurs"
+            : "Prochain palier : " + nextTarget + " soutiens";
+      }
+
+      CAMPAIGN_MILESTONES.forEach(target => {
+        const el = document.getElementById("milestone-" + target);
+        if (el && count >= target) el.classList.add("reached");
+      });
+    }
+
     async function loadCommunityData() {
       const counter = document.getElementById("signature-counter");
       const countElement = document.getElementById("signature-count");
+      const heroCountElement = document.getElementById("hero-signature-count");
       const messagesContainer = document.getElementById("support-messages");
       const messagesStatus = document.getElementById("messages-status");
+      const wallContainer = document.getElementById("support-wall");
+      const wallStatus = document.getElementById("support-wall-status");
+
       if (!counter) return;
 
       try {
@@ -536,27 +678,46 @@
         const rows = parseCsvRows(await response.text());
         if (rows.length <= 1) {
           if (countElement) countElement.textContent = "0";
+          if (heroCountElement) heroCountElement.textContent = "0";
+          updateCampaignProgress(0);
           if (messagesStatus) messagesStatus.textContent = "Aucun message affiché pour le moment.";
+          if (wallStatus) wallStatus.textContent = "Aucun soutien affiché pour le moment.";
           return;
         }
 
         const headers = rows[0];
         const responses = rows.slice(1).filter(row => row.some(cell => cell.trim() !== ""));
-        if (countElement) countElement.textContent = responses.length.toString();
+        const count = responses.length;
 
-        if (!messagesContainer || !messagesStatus) return;
+        if (countElement) countElement.textContent = count.toString();
+        if (heroCountElement) heroCountElement.textContent = count.toString();
+        updateCampaignProgress(count);
 
         const pseudoIndex = findColumnIndex(headers, ["pseudo"]);
+        const messageIndex = 6; // Colonne G du Google Sheet
 
-        // Colonne G du Google Sheet = index 6 en JavaScript.
-        // Cette colonne contient le message de soutien.
-        const messageIndex = 6;
+        const signedItems = responses.map(row => {
+          const pseudo = pseudoIndex >= 0 ? (row[pseudoIndex] || "").trim() : "";
+          return pseudo || "Un Jedi anonyme";
+        });
+
+        if (wallContainer && wallStatus) {
+          wallStatus.textContent = count === 1
+            ? "1 soutien affiché."
+            : count + " soutiens affichés.";
+
+          wallContainer.innerHTML = signedItems.map(name => `
+            <span class="supporter-chip">${escapeHtml(name)}</span>
+          `).join("");
+        }
+
+        if (!messagesContainer || !messagesStatus) return;
 
         const messages = responses.map(row => {
           const message = (row[messageIndex] || "").trim();
           const pseudo = pseudoIndex >= 0 ? (row[pseudoIndex] || "").trim() : "";
           return { message, pseudo: pseudo || "Un Jedi anonyme" };
-        }).filter(item => item.message.length > 0);
+        }).filter(item => item.message.length > 0).reverse();
 
         if (messages.length === 0) {
           messagesStatus.textContent = "Aucun message affiché pour le moment.";
@@ -566,7 +727,7 @@
 
         messagesStatus.textContent = messages.length === 1
           ? "1 message de soutien affiché."
-          : messages.length + " messages de soutien affichés.";
+          : messages.length + " messages de soutien affichés. Les plus récents apparaissent en premier.";
 
         messagesContainer.innerHTML = messages.map(item => `
           <article class="message-card">
@@ -581,7 +742,10 @@
           countElement.textContent = "30+";
           counter.innerHTML = '<strong>30+</strong> joueurs soutiennent déjà cette candidature';
         }
+        if (heroCountElement) heroCountElement.textContent = "30+";
+        updateCampaignProgress(30);
         if (messagesStatus) messagesStatus.textContent = "Les messages ne peuvent pas être chargés pour le moment.";
+        if (wallStatus) wallStatus.textContent = "Le mur des soutiens ne peut pas être chargé pour le moment.";
       }
     }
 
