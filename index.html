@@ -338,6 +338,42 @@
       font-size: 0.92rem;
     }
 
+
+    .video-links {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .video-card {
+      display: block;
+      padding: 16px 18px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      text-decoration: none;
+      color: var(--text);
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    .video-card:hover {
+      transform: translateY(-1px);
+      opacity: 0.92;
+    }
+
+    .video-card strong {
+      display: block;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .video-card span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
     footer {
       max-width: 1120px;
       margin: 0 auto;
@@ -552,19 +588,108 @@
       </div>
     </section>
 
-    <section class="faq">
-      <h2>Questions fréquentes</h2>
+
+    <section class="faq" id="faq">
+      <h2>Tout savoir sur notre démarche</h2>
+
+      <details>
+        <summary>Qu'est-ce que la Ligue Nationale Star Wars™: Unlimited organisée par Asmodee France ?</summary>
+        <p>
+          La Ligue Nationale est un programme officiel de jeu organisé par Asmodee France autour de
+          Star Wars™: Unlimited.
+        </p>
+        <p>
+          Pendant plusieurs mois, les joueurs participent à des rencontres régulières dans les boutiques
+          sélectionnées afin de marquer des points au classement de la Ligue. Cette saison se conclut par
+          une grande finale nationale réunissant les meilleurs joueurs.
+        </p>
+        <p>
+          Au-delà de l'aspect compétitif, la Ligue a pour vocation de développer les communautés locales,
+          d'encourager la pratique régulière du jeu, de valoriser les boutiques investies dans l'organisation
+          d'événements et de créer un véritable rendez-vous pour les joueurs tout au long de la saison.
+        </p>
+        <p>
+          La communauté strasbourgeoise souhaiterait avoir l'opportunité de participer à cette aventure
+          aux côtés de Philibert Strasbourg.
+        </p>
+      </details>
+
+      <details>
+        <summary>Pourquoi Philibert Strasbourg n'a-t-il pas participé à la première saison ?</summary>
+        <p>
+          La première édition de la Ligue Nationale s'est déroulée avec un nombre limité de boutiques
+          partenaires sélectionnées par Asmodee France. À cette occasion, Philibert Strasbourg n'a
+          malheureusement pas été retenu.
+        </p>
+        <p>
+          Notre démarche ne vise pas à remettre en question cette décision ni le travail réalisé pour cette
+          première saison. Elle a pour objectif de montrer qu'une communauté dynamique, fidèle et investie
+          existe à Strasbourg et qu'elle souhaite pouvoir prendre part à une prochaine édition de la Ligue Nationale.
+        </p>
+      </details>
+
+      <details>
+        <summary>Vous souhaitez en savoir plus sur la Ligue Nationale Star Wars™: Unlimited ?</summary>
+        <p>
+          Si vous souhaitez découvrir le fonctionnement de la Ligue Nationale, son organisation ou les retours
+          d'expérience des joueurs ayant participé à la première saison, nous vous recommandons les ressources suivantes :
+        </p>
+
+        <div class="video-links">
+          <a class="video-card" href="https://www.youtube.com/watch?v=xaTeIYZkZOA&t=545s" target="_blank" rel="noopener">
+            <strong>▶ Commencer la compétition avec la Ligue SWU (mars à juin 2026)</strong>
+            <span>Chaîne : Nico Odo Unlimited</span>
+          </a>
+
+          <a class="video-card" href="https://www.youtube.com/watch?v=gL4q0-nIcUA" target="_blank" rel="noopener">
+            <strong>▶ On parle de la Ligue Star Wars™: Unlimited avec Matthieu Rolland d'Asmodee !</strong>
+            <span>Chaîne : Les Cartes sur Table</span>
+          </a>
+
+          <a class="video-card" href="https://youtu.be/g9T2wPVoeO8?si=jkZSaz5gnvGK6iBB" target="_blank" rel="noopener">
+            <strong>▶ De Brest au podium des Championnats de France</strong>
+            <span>Chaîne : Nico Odo Unlimited</span>
+          </a>
+        </div>
+      </details>
+
+      <details>
+        <summary>Comment puis-je aider ?</summary>
+        <p>Vous souhaitez soutenir cette initiative ? C'est très simple :</p>
+        <ul>
+          <li>Signer la lettre de soutien en quelques secondes ;</li>
+          <li>Partager cette page auprès des joueurs de votre entourage ;</li>
+          <li>Rejoindre notre communauté sur Discord et WhatsApp ;</li>
+          <li>Participer aux événements organisés par Philibert Strasbourg ;</li>
+          <li>Parler de cette initiative autour de vous afin de montrer la mobilisation de notre communauté.</li>
+        </ul>
+        <p>
+          Chaque soutien contribue à démontrer le dynamisme de la communauté Star Wars™: Unlimited de Strasbourg
+          et son souhait de voir Philibert Strasbourg rejoindre une prochaine édition de la Ligue Nationale.
+        </p>
+      </details>
+
       <details>
         <summary>Cette démarche est-elle une pétition contre Asmodee France ?</summary>
-        <p>Non. Il s'agit d'une lettre de soutien positive destinée à appuyer la candidature de Philibert Strasbourg pour une prochaine saison.</p>
+        <p>
+          Non. Il s'agit d'une lettre de soutien positive destinée à appuyer la candidature de Philibert Strasbourg
+          pour une prochaine saison.
+        </p>
       </details>
+
       <details>
         <summary>Les données collectées seront-elles publiques ?</summary>
-        <p>Non. Elles sont destinées à constituer la liste des soutiens transmise à Philibert dans le cadre exclusif de cette démarche.</p>
+        <p>
+          Non. Elles sont destinées à constituer la liste des soutiens transmise à Philibert dans le cadre exclusif
+          de cette démarche.
+        </p>
       </details>
+
       <details>
         <summary>Faut-il être joueur compétitif pour signer ?</summary>
-        <p>Non. Tout joueur ou sympathisant de la communauté locale peut soutenir la démarche.</p>
+        <p>
+          Non. Tout joueur ou sympathisant de la communauté locale peut soutenir la démarche.
+        </p>
       </details>
     </section>
   </main>
